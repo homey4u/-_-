@@ -1,0 +1,51 @@
+module Ex4_Unoptimized(x3, x2, x1, f4);
+    input x3, x2, x1;
+    output f4;
+
+    wire nx3, nx2, nx1;
+    wire nand_m0, m0;
+    wire nand_m3, m3;
+    wire nand_m5, m5;
+    wire nand_m7, m7;
+
+    assign nx3 = ~(x3 & x3);
+    assign nx2 = ~(x2 & x2);
+    assign nx1 = ~(x1 & x1);
+
+    assign nand_m0 = ~(nx3 & nx2 & nx1);
+    assign m0 = ~(nand_m0 & nand_m0);
+
+    assign nand_m3 = ~(nx3 & x2 & x1);
+    assign m3 = ~(nand_m3 & nand_m3);
+
+    assign nand_m5 = ~(x3 & nx2 & x1);
+    assign m5 = ~(nand_m5 & nand_m5);
+
+    assign nand_m7 = ~(x3 & x2 & x1);
+    assign m7 = ~(nand_m7 & nand_m7);
+
+    assign f4 = m0 | m3 | m5 | m7;
+endmodule
+
+module Ex4_Optimized(x3, x2, x1, f4);
+    input x3, x2, x1;
+    output f4;
+
+    wire nx3, nx2, nx1;
+    wire nand_part1, part1;
+    wire or_x2_x3;
+    wire nand_part2, part2;
+
+    assign nx3 = ~(x3 & x3);
+    assign nx2 = ~(x2 & x2);
+    assign nx1 = ~(x1 & x1);
+
+    assign nand_part1 = ~(nx3 & nx2 & nx1);
+    assign part1 = ~(nand_part1 & nand_part1);
+
+    assign or_x2_x3 = x2 | x3;
+    assign nand_part2 = ~(x1 & or_x2_x3);
+    assign part2 = ~(nand_part2 & nand_part2);
+
+    assign f4 = part1 | part2;
+endmodule
